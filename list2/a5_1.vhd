@@ -28,14 +28,33 @@ BEGIN
       q3 <= data3;
     elsif(clk'event and clk = '1')
     then
-	    q1(18 downto 1) <= q1(17 downto 0);
-	    q1(0) <= q1(18) XOR q1(17) XOR q1(16) XOR q1(13);
+		if (q1(8) = q2(10))
+		then
+			q1(18 downto 1) <= q1(17 downto 0);
+	  		q1(0) <= q1(18) XOR q1(17) XOR q1(16) XOR q1(13);
 
-      q2(21 downto 1) <= q2(20 downto 0);
-      q2(0) <= q2(21) XOR q2(20);
+      		q2(21 downto 1) <= q2(20 downto 0);
+      		q2(0) <= q2(21) XOR q2(20);
+			if (q1(8) = q3(10))
+			then
+				q3(22 downto 1) <= q3(21 downto 0);
+				q3(0) <= q3(22) XOR q3(21) XOR q3(20) XOR q3(7);
+			end if;
+		elsif (q1(8) = q3(10))
+		then
+			q1(18 downto 1) <= q1(17 downto 0);
+			q1(0) <= q1(18) XOR q1(17) XOR q1(16) XOR q1(13);
 
-      q3(22 downto 1) <= q3(21 downto 0);
-      q3(0) <= q3(22) XOR q3(21) XOR q3(20) XOR q3(7);
+			q3(22 downto 1) <= q3(21 downto 0);
+			q3(0) <= q3(22) XOR q3(21) XOR q3(20) XOR q3(7);
+		else
+			q2(21 downto 1) <= q2(20 downto 0);
+      		q2(0) <= q2(21) XOR q2(20);
+			
+			q3(22 downto 1) <= q3(21 downto 0);
+			q3(0) <= q3(22) XOR q3(21) XOR q3(20) XOR q3(7);
+		end if;
+
     end if;
   END PROCESS;
   R <= q1(18) XOR q2(21) XOR q3(22);

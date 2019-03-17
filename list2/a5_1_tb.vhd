@@ -1,6 +1,8 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.STD_LOGIC_UNSIGNED.ALL;
+use STD.textio.all;
+use ieee.std_logic_textio.all;
 
 entity a5_1_tb is
   end a5_1_tb;
@@ -26,7 +28,7 @@ architecture complex of a5_1_tb is
   end component;
 
   for UUT1 : a5_1 use entity work.a5_1(behav);
-
+	file file_RESULTS : text;
 begin
 
   UUT1 : a5_1 port map ( clk => clock, ld => load, data1 => q1, data2 => q2, data3 => q3, R => o );
@@ -41,7 +43,9 @@ begin
 
   -- this will run once and then wait forever
   init : process
+  	variable outputline : line;
   begin
+	  file_open(file_RESULTS, "output_results.txt", write_mode);
     -- time to tell LFSRs to load up some data
     load <= '1';
     -- and give it to them (to one of them, at least)
@@ -52,7 +56,13 @@ begin
     wait until clock'event and clock = '0';
     -- ... and let them run freely
     load <= '0';
-    -- this process is finished, make it wait ad infinitum
+    for i in 0 to 1199 loop
+    	wait until clock'event and clock = '0';
+		write(outputline, o);
+
+    end loop;
+	writeline(file_RESULTS, outputline);
+		file_close(file_RESULTS);
     wait;
   end process;
 
